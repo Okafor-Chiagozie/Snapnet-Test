@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendWelcomeEmail;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -34,6 +35,8 @@ class EmployeeController extends Controller
       $employee = new Employee($request->all());
       $employee->project_id = $projectId;
       $employee->save();
+
+      SendWelcomeEmail::dispatch($employee);
 
       return response()->json($employee, 201);
    }
