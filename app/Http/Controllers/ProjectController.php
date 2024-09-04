@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller
 {
+
+   use AuthorizesRequests;
+
    /**
     * Display a listing of the resource.
     */
@@ -54,6 +58,7 @@ class ProjectController extends Controller
    public function update(Request $request, $id)
    {
       $project = Project::findOrFail($id);
+      $this->authorize('update', $project);
 
       $validator = Validator::make($request->all(), [
          'name' => 'required|unique:projects,name,' . $project->id,
@@ -78,6 +83,8 @@ class ProjectController extends Controller
    public function destroy($id)
    {
       $project = Project::findOrFail($id);
+      $this->authorize('delete', $project);
+      
       $project->delete();
 
       return response()->json(null, 204);
