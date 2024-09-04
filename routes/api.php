@@ -20,4 +20,6 @@ Route::middleware('auth:sanctum')->group(function () {
       [EmployeeController::class, 'restore']
    )
       ->name('employees.restore');
+
+   Route::get('dashboard', [ProjectController::class, 'dashboard']);
 });

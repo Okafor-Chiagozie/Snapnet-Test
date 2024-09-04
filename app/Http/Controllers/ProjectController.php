@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use App\Models\Project;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -84,9 +85,28 @@ class ProjectController extends Controller
    {
       $project = Project::findOrFail($id);
       $this->authorize('delete', $project);
-      
+
       $project->delete();
 
       return response()->json(null, 204);
    }
+
+   public function dashboard()
+   {
+      $totalProjects = Project::count();
+      $totalEmployees =
+      $totalEmployees = Employee::count();
+      $completedProjects = Project::where('status', 'completed')->count();
+      $pendingProjects = Project::where('status', 'pending')->count();
+      $inProgressProjects = Project::where('status', 'in-progress')->count();
+
+      return response()->json([
+         'total_projects' => $totalProjects,
+         'total_employees' => $totalEmployees,
+         'completed_projects' => $completedProjects,
+         'pending_projects' => $pendingProjects,
+         'in_progress_projects' => $inProgressProjects,
+      ]);
+   }
+
 }
